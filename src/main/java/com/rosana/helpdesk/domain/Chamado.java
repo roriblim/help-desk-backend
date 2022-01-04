@@ -1,23 +1,46 @@
 package com.rosana.helpdesk.domain;
 
-import com.rosana.helpdesk.domain.enums.Prioridade;
-import com.rosana.helpdesk.domain.enums.Status;
-
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Chamado {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rosana.helpdesk.domain.enums.Prioridade;
+import com.rosana.helpdesk.domain.enums.Status;
+
+@Entity
+public class Chamado implements Serializable{
+	private static final long serialVersionUID = 1L; 
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate dataAbertura = LocalDate.now();
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate dataFechamento;
+	
 	private Prioridade prioridade;
 	private Status status;
 	private String titulo;
 	private String observacoes;
 	
 	//cada chamado terá um técnico e um cliente relacionados a ele:
+	
+	@ManyToOne   //tecnico_id é chave secundária/estrangeira de Chamado!! Só tem um técnico para cada chamado  
+	@JoinColumn(name="tecnico_id") 
 	private Tecnico tecnico;
+	
+	@ManyToOne   //cliente_id é chave secundária/estrangeira de Chamado!
+	@JoinColumn(name="cliente_id") 
 	private Cliente cliente;
 	
 	
