@@ -26,7 +26,7 @@ public enum Perfil {
 			return descricao;
 		}
 
-		public static Perfil toEnum(Integer cod) {
+		public static Perfil toEnum(Integer cod) { //vai retornar um perfil para determinado integer
 			if (cod ==null) {
 				return null;
 			}
