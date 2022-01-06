@@ -1,5 +1,6 @@
 package com.rosana.helpdesk.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rosana.helpdesk.domain.Tecnico;
 import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
@@ -42,6 +46,20 @@ public class TecnicoResource {
 			List<TecnicoDTO> listDTO = list.stream().map(x-> new TecnicoDTO(x)).collect(Collectors.toList());
 			return ResponseEntity.ok().body(listDTO);
 		}
+		
+		@PostMapping //as informações vão vir no corpo da requisição
+		public ResponseEntity<TecnicoDTO> create(@RequestBody TecnicoDTO  objDTO){
+			Tecnico newObj = service.create(objDTO);
+			//podemos criar a URL do find by id para o objeto criado, e retornar isso na resposta.
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getId()).toUri();
+			return ResponseEntity.created(uri).build();
+			//na resposta do backend, a uri de acesso a esse objeto criado vai estar nos headers.
+		}
+		//obs.: note que, na hora de fazer o post, basta enviar nome, cpf, email e senha
+        //o perfil mínimo de cliente já é colocado em cada nova construção de Tecnico
+		//o id é gerado automaticamente pelo banco
+		//a data de criacao sera gerada no momento da criacao do Tecnico
+    
 		
 		
 

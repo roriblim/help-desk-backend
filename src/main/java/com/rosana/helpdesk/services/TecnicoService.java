@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rosana.helpdesk.domain.Tecnico;
+import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
 import com.rosana.helpdesk.repositories.TecnicoRepository;
 import com.rosana.helpdesk.services.exceptions.ObjectNotFoundException;
 
@@ -28,6 +29,13 @@ public class TecnicoService {
 	public List<Tecnico> findAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
+	}
+
+	public Tecnico create(TecnicoDTO objDTO) {
+		// TODO Auto-generated method stub
+		objDTO.setId(null); //se for passado um valor de Id na requisição, o banco vai ignorar
+		Tecnico newObj = new Tecnico(objDTO);
+		return repository.save(newObj);
 	}
 	
 	
