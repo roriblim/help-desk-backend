@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rosana.helpdesk.domain.Tecnico;
+import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
 import com.rosana.helpdesk.services.TecnicoService;
 
 // camada de controladores REST
@@ -26,10 +27,10 @@ public class TecnicoResource {
 		
 		//ex.: localhost:8080/tecnicos/1
 		@GetMapping(value = "/{id}")        
-		public ResponseEntity<Tecnico> findById(@PathVariable Integer id){
+		public ResponseEntity<TecnicoDTO> findById(@PathVariable Integer id){
 			//como no GetMapping estamos recebendo uma variável de path, precisamos colocar o @PathVariable nos parâmetros
 			Tecnico obj = this.service.findById(id);
-			return ResponseEntity.ok().body(obj);
+			return ResponseEntity.ok().body(new TecnicoDTO(obj));
 		}
 
 }
