@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.rosana.helpdesk.domain.Pessoa;
 import com.rosana.helpdesk.domain.Tecnico;
 import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
+import com.rosana.helpdesk.repositories.PessoaRepository;
 import com.rosana.helpdesk.repositories.TecnicoRepository;
 import com.rosana.helpdesk.services.exceptions.ObjectNotFoundException;
 
@@ -16,6 +19,8 @@ public class TecnicoService {
 
 	@Autowired
 	private TecnicoRepository repository;
+	@Autowired 
+	private PessoaRepository pessoaRepository;
 	
 	public Tecnico findById(Integer id) {
 		Optional<Tecnico> obj = repository.findById(id); //findById retorna um Optional (pode encontrar ou não)
@@ -34,8 +39,25 @@ public class TecnicoService {
 	public Tecnico create(TecnicoDTO objDTO) {
 		// TODO Auto-generated method stub
 		objDTO.setId(null); //se for passado um valor de Id na requisição, o banco vai ignorar
+		validaPorCpfEEmail(objDTO); //queremos que, se o cpf ou o email fornecido já existirem no banco, não seja possível a persistência desse dado
 		Tecnico newObj = new Tecnico(objDTO);
 		return repository.save(newObj);
+	}
+
+	private void validaPorCpfEEmail(TecnicoDTO objDTO) {
+		// TODO Auto-generated method stub
+		Optional<Pessoa> obj = pessoaRepository.findByCpf(objDTO.getCpf());
+		//note aqui o uso do Optional e do método isPresent()!
+		if (obj.isPresent() && obj.get().getId() != objDTO.getId()) {
+			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");	
+			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO CPF DE UM QUE JÁ ESTÁ NO BANCO
+		}
+		
+		obj = pessoaRepository.findByEmail(objDTO.getEmail());
+		if (obj.isPresent() && obj.get().getId() != objDTO.getId()) {
+			throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");	
+			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO E-MAIL DE UM QUE JÁ ESTÁ NO BANCO
+		}
 	}
 	
 	
