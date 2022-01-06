@@ -1,5 +1,6 @@
 package com.rosana.helpdesk.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class TecnicoService {
 		//o obj resultado desse método (Tecnico) para TecnicoDTO, pode dar um nullpointerexception.
 		//para resolver isso, podemos lançar uma excecao
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
+	}
+
+	public List<Tecnico> findAll() {
+		// TODO Auto-generated method stub
+		return repository.findAll();
 	}
 	
 	
