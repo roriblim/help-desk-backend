@@ -2,12 +2,10 @@ package com.rosana.helpdesk.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rosana.helpdesk.domain.enums.Perfil;
 
 @Entity
@@ -24,8 +22,8 @@ public class Cliente extends Pessoa{
 			// TODO Auto-generated constructor stub
 		}
 
-		public Cliente(Integer id, String nome, String cpf, String email, String senha, Set<Perfil> perfis) {
-			super(id, nome, cpf, email, senha, perfis);
+		public Cliente(Integer id, String nome, String cpf, String email, String senha) {
+			super(id, nome, cpf, email, senha);
 			addPerfil(Perfil.CLIENTE);
 			// TODO Auto-generated constructor stub
 		}

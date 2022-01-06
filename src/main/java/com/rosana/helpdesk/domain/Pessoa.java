@@ -44,8 +44,10 @@ public abstract class Pessoa implements Serializable{
 		//quando a gente carregar o usuário, já queremos que os perfis sejam carregados também.
 		//caso contrário, poderia haver problemas.
 		//se o fetch fosse lazy, essa coleção de perfis só carregaria quando a gente chamasse ela especificamente.
+		
+		//note ainda que o ElementCollection EAGER já faz com que uma tabela que relaciona PERFIS e PESSOAS seja gerada automaticamente
 		@ElementCollection(fetch = FetchType.EAGER)  //estou assegurando que a lista de perfis vai vir imediatamente junto com o usuário
-		@CollectionTable(name="PERFIS") //vai criar uma tabela com os perfis
+		@CollectionTable(name="PERFIS") //vai configurar a tabela criada pelo ElementCollection
 		protected Set<Integer> perfis = new HashSet<>(); //já inicializamos para evitar nullpointer exception
 		
 		@JsonFormat(pattern="dd/MM/yyyy")
@@ -57,7 +59,7 @@ public abstract class Pessoa implements Serializable{
 			addPerfil(Perfil.CLIENTE); //CADA PESSOA CRIADA VAI TER NO MÍNIMO O PERFIL CLIENTE
 		}
 
-		public Pessoa(Integer id, String nome, String cpf, String email, String senha, Set<Perfil> perfis) {
+		public Pessoa(Integer id, String nome, String cpf, String email, String senha) {
 			super();
 			this.id = id;
 			this.nome = nome;
