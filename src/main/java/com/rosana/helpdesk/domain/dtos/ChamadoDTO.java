@@ -3,9 +3,10 @@ package com.rosana.helpdesk.domain.dtos;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rosana.helpdesk.domain.Chamado;
-import com.rosana.helpdesk.domain.enums.Status;
 
 public class ChamadoDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -15,11 +16,17 @@ public class ChamadoDTO implements Serializable{
 	private LocalDate dataAbertura = LocalDate.now();
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate dataFechamento;
+	@NotNull(message = "O campo PRIORIDADE é requerido")
 	private Integer prioridade;
-	private Status status;
+	@NotNull(message = "O campo STATUS é requerido")
+	private Integer status;
+	@NotNull(message = "O campo TITULO é requerido")
 	private String titulo;
+	@NotNull(message = "O campo OBSERVACOES é requerido")
 	private String observacoes;
+	@NotNull(message = "O campo TECNICO é requerido")
 	private Integer tecnico;
+	@NotNull(message = "O campo CLIENTE é requerido")
 	private Integer cliente;
 	//já vamos manter aqui o nome do técnico e do cliente, a fim de que o código fique mais performático
 	//(que não precise dar um find by id toda vez para puxar o nome do técnico)
@@ -37,7 +44,7 @@ public class ChamadoDTO implements Serializable{
 		this.dataAbertura = obj.getDataAbertura();
 		this.dataFechamento = obj.getDataFechamento();
 		this.prioridade = obj.getPrioridade().getCodigo();
-		this.status = obj.getStatus();
+		this.status = obj.getStatus().getCodigo();
 		this.titulo = obj.getTitulo();
 		this.observacoes = obj.getObservacoes();
 		this.tecnico = obj.getTecnico().getId();
@@ -78,11 +85,11 @@ public class ChamadoDTO implements Serializable{
 		this.prioridade = prioridade;
 	}
 
-	public Status getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
