@@ -6,14 +6,15 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.rosana.helpdesk.domain.Chamado;
 import com.rosana.helpdesk.domain.Pessoa;
 import com.rosana.helpdesk.domain.Tecnico;
 import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
 import com.rosana.helpdesk.repositories.PessoaRepository;
 import com.rosana.helpdesk.repositories.TecnicoRepository;
+import com.rosana.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.rosana.helpdesk.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -55,6 +56,17 @@ public class TecnicoService {
 		return repository.save(oldObj);
 		
 	}
+
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		Tecnico oldObj = findById(id);   //importante para validar se o objeto existe; se não existir, vai lancar uma exceção.
+		if(oldObj.getChamados().size() > 0) {
+			throw new DataIntegrityViolationException("O técnico possui ordens de serviço e não pode ser deletado!");
+		} else {
+		repository.deleteById(id);
+			//repository.delete(oldObj);	
+		}
+	}
 	
 
 	private void validaPorCpfEEmail(TecnicoDTO objDTO) {
@@ -73,8 +85,4 @@ public class TecnicoService {
 		}
 	}
 
-
-	
-	
-	
 }

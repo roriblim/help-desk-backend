@@ -2,7 +2,6 @@ package com.rosana.helpdesk.resources.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.rosana.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.rosana.helpdesk.services.exceptions.ObjectNotFoundException;
 
 /*
@@ -33,17 +33,16 @@ public class ResourceExceptionHandler {
 			
 		}
 		
-		//para lidar com a exceção de violação da integridade dos dados (quando tentamos adicionar um dado de um cpf ou email que
+		//para lidar com a exceção de violação da integridade dos dados (quando tentamos adicionar um dado com um cpf ou email que
 		//já existe, por exemplo):
 		@ExceptionHandler(DataIntegrityViolationException.class)
 		public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex,
-											HttpServletRequest request){
-			
-			StandardError error = new StandardError(System.currentTimeMillis(),HttpStatus.BAD_REQUEST.value(),
-					           "Violação de integridade de dados", ex.getMessage(),request.getRequestURI());
-			
+				HttpServletRequest request) {
+
+			StandardError error = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+					"Violação de dados", ex.getMessage(), request.getRequestURI());
+
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-			
 		}
 		
 		//essa é a exceção que estava dando quando tentamos criar técnico sem um dos campos obrigatórios
