@@ -3,6 +3,8 @@ package com.rosana.helpdesk.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,17 @@ public class TecnicoService {
 		Tecnico newObj = new Tecnico(objDTO);
 		return repository.save(newObj);
 	}
+	
+	public Tecnico update(Integer id, @Valid TecnicoDTO objDTO) {
+		// TODO Auto-generated method stub
+		objDTO.setId(id);
+		Tecnico oldObj = findById(id);
+		validaPorCpfEEmail(objDTO);
+		oldObj = new Tecnico(objDTO);
+		return repository.save(oldObj);
+		
+	}
+	
 
 	private void validaPorCpfEEmail(TecnicoDTO objDTO) {
 		// TODO Auto-generated method stub
@@ -50,15 +63,17 @@ public class TecnicoService {
 		//note aqui o uso do Optional e do método isPresent()!
 		if (obj.isPresent() && obj.get().getId() != objDTO.getId()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");	
-			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO CPF DE UM QUE JÁ ESTÁ NO BANCO
+			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO CPF DE UM OUTRO (ID) QUE JÁ ESTÁ NO BANCO
 		}
 		
 		obj = pessoaRepository.findByEmail(objDTO.getEmail());
 		if (obj.isPresent() && obj.get().getId() != objDTO.getId()) {
 			throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");	
-			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO E-MAIL DE UM QUE JÁ ESTÁ NO BANCO
+			//VAI LANÇAR UMA EXCEÇÃO SE EU TENTAR VALIDAR UM OBJETO COM O MESMO E-MAIL DE UM OUTRO (ID) QUE JÁ ESTÁ NO BANCO
 		}
 	}
+
+
 	
 	
 	

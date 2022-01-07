@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,10 +59,16 @@ public class TecnicoResource {
 			//na resposta do backend, a uri de acesso a esse objeto criado vai estar nos headers.
 		}
 		//obs.: note que, na hora de fazer o post, basta enviar nome, cpf, email e senha
-        //o perfil mínimo de cliente já é colocado em cada nova construção de Tecnico
+        //o perfil mínimo de cliente já é colocado em cada nova construção de Tecnico (mas posso colocar também o perfil 0 se quiser)
 		//o id é gerado automaticamente pelo banco
 		//a data de criacao sera gerada no momento da criacao do Tecnico
     
+		
+		@PutMapping(value = "/{id}")
+		public ResponseEntity<TecnicoDTO> update(@PathVariable Integer id, @Valid @RequestBody TecnicoDTO objDTO){
+			Tecnico obj = service.update(id,objDTO);
+			return ResponseEntity.ok().body(new TecnicoDTO(obj));
+		}
 		
 		
 
