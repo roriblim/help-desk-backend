@@ -10,7 +10,6 @@ public class ValidationError extends StandardError{
 	//além de ValidationError ter os campos padrão de StandardError, vai ter uma lista de FieldMessage
 	private List<FieldMessage> errors = new ArrayList<>();
 
-
 	public ValidationError() {
 		super();
 		// TODO Auto-generated constructor stub
