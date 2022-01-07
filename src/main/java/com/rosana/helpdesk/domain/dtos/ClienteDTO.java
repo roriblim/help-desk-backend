@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rosana.helpdesk.domain.Tecnico;
+import com.rosana.helpdesk.domain.Cliente;
 import com.rosana.helpdesk.domain.enums.Perfil;
 
-public class TecnicoDTO implements Serializable{
+public class ClienteDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	protected Integer id;
@@ -39,7 +39,7 @@ public class TecnicoDTO implements Serializable{
 	@JsonFormat(pattern="dd/MM/yyyy")
 	protected LocalDate dataCriacao = LocalDate.now();
 
-	public TecnicoDTO(Tecnico obj) {
+	public ClienteDTO(Cliente obj) {
 		super();
 		this.id = obj.getId();
 		this.nome = obj.getNome();
@@ -53,7 +53,7 @@ public class TecnicoDTO implements Serializable{
 	//note que nessa classe não precisamos de hashcode e equals, pois não iremos salvar no BD a partir dela
 	//é apenas para retornar informações ao usuário
 	
-	public TecnicoDTO() {
+	public ClienteDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

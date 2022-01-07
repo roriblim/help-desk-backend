@@ -34,7 +34,6 @@ public abstract class Pessoa implements Serializable{
 		
 		protected String nome;
 		
-		@CPF
 		@Column(unique = true) //não poderá haver dois dados com o mesmo valor lá no banco!
 		protected String cpf;
 		

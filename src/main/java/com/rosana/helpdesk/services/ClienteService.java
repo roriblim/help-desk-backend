@@ -9,58 +9,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rosana.helpdesk.domain.Pessoa;
-import com.rosana.helpdesk.domain.Tecnico;
-import com.rosana.helpdesk.domain.dtos.TecnicoDTO;
+import com.rosana.helpdesk.domain.Cliente;
+import com.rosana.helpdesk.domain.dtos.ClienteDTO;
 import com.rosana.helpdesk.repositories.PessoaRepository;
-import com.rosana.helpdesk.repositories.TecnicoRepository;
+import com.rosana.helpdesk.repositories.ClienteRepository;
 import com.rosana.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.rosana.helpdesk.services.exceptions.ObjectNotFoundException;
 
 @Service
-public class TecnicoService {
+public class ClienteService {
 
 	@Autowired
-	private TecnicoRepository repository;
+	private ClienteRepository repository;
 	@Autowired 
 	private PessoaRepository pessoaRepository;
 	
-	public Tecnico findById(Integer id) {
-		Optional<Tecnico> obj = repository.findById(id); //findById retorna um Optional (pode encontrar ou não)
+	public Cliente findById(Integer id) {
+		Optional<Cliente> obj = repository.findById(id); //findById retorna um Optional (pode encontrar ou não)
 		//return obj.orElse(null); 
 		//note que usar esse orElse(null) acima pode gerar outros problemas para gente: por exemplo, quando eu for converter
-		//o obj resultado desse método (Tecnico) para TecnicoDTO, pode dar um nullpointerexception.
+		//o obj resultado desse método (Cliente) para ClienteDTO, pode dar um nullpointerexception.
 		//para resolver isso, podemos lançar uma excecao
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id));
 	}
 
-	public List<Tecnico> findAll() {
+	public List<Cliente> findAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
 	}
 
-	public Tecnico create(TecnicoDTO objDTO) {
+	public Cliente create(ClienteDTO objDTO) {
 		// TODO Auto-generated method stub
 		objDTO.setId(null); //se for passado um valor de Id na requisição, o banco vai ignorar
 		validaPorCpfEEmail(objDTO); //queremos que, se o cpf ou o email fornecido já existirem no banco, não seja possível a persistência desse dado
-		Tecnico newObj = new Tecnico(objDTO);
+		Cliente newObj = new Cliente(objDTO);
 		return repository.save(newObj);
 	}
 	
-	public Tecnico update(Integer id, @Valid TecnicoDTO objDTO) {
+	public Cliente update(Integer id, @Valid ClienteDTO objDTO) {
 		// TODO Auto-generated method stub
 		objDTO.setId(id);
-		Tecnico oldObj = findById(id);
+		Cliente oldObj = findById(id);
 		validaPorCpfEEmail(objDTO);
-		oldObj = new Tecnico(objDTO);
+		oldObj = new Cliente(objDTO);
 		return repository.save(oldObj);
 		
 	}
 
 	public void delete(Integer id) {
 		// TODO Auto-generated method stub
-		Tecnico oldObj = findById(id);   //importante para validar se o objeto existe; se não existir, vai lancar uma exceção.
+		Cliente oldObj = findById(id);   //importante para validar se o objeto existe; se não existir, vai lancar uma exceção.
 		if(oldObj.getChamados().size() > 0) {
-			throw new DataIntegrityViolationException("O técnico possui ordens de serviço e não pode ser deletado!");
+			throw new DataIntegrityViolationException("O cliente possui ordens de serviço e não pode ser deletado!");
 		} else {
 		repository.deleteById(id);
 			//repository.delete(oldObj);	
@@ -68,7 +68,7 @@ public class TecnicoService {
 	}
 	
 
-	private void validaPorCpfEEmail(TecnicoDTO objDTO) {
+	private void validaPorCpfEEmail(ClienteDTO objDTO) {
 		// TODO Auto-generated method stub
 		Optional<Pessoa> obj = pessoaRepository.findByCpf(objDTO.getCpf());
 		//note aqui o uso do Optional e do método isPresent()!
