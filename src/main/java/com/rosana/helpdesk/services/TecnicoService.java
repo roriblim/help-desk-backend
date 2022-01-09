@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rosana.helpdesk.domain.Pessoa;
@@ -23,6 +24,8 @@ public class TecnicoService {
 	private TecnicoRepository repository;
 	@Autowired 
 	private PessoaRepository pessoaRepository;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	
 	public Tecnico findById(Integer id) {
 		Optional<Tecnico> obj = repository.findById(id); //findById retorna um Optional (pode encontrar ou não)
@@ -41,6 +44,7 @@ public class TecnicoService {
 	public Tecnico create(TecnicoDTO objDTO) {
 		// TODO Auto-generated method stub
 		objDTO.setId(null); //se for passado um valor de Id na requisição, o banco vai ignorar
+		objDTO.setSenha(encoder.encode(objDTO.getSenha())); //o objeto novo precisa ter a senha codificada antes de armazená-la
 		validaPorCpfEEmail(objDTO); //queremos que, se o cpf ou o email fornecido já existirem no banco, não seja possível a persistência desse dado
 		Tecnico newObj = new Tecnico(objDTO);
 		return repository.save(newObj);

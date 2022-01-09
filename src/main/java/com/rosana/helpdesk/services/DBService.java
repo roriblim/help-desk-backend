@@ -3,6 +3,7 @@ package com.rosana.helpdesk.services;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rosana.helpdesk.domain.Chamado;
@@ -24,19 +25,21 @@ public class DBService {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private ChamadoRepository chamadoRepository;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	
 	public void instanciaDB() {
 		
 			//----AQUI ESTAMOS CRIANDO, MAS AINDA NÃO É SALVO NO BD.
-			Tecnico tec1 = new Tecnico(null, "Valdir cezar", "63653230268", "valdir@mail.com", "123");
-			Tecnico tec2 = new Tecnico(null, "Rosana", "12345678901", "rosana@mail.com", "456");
+			Tecnico tec1 = new Tecnico(null, "Valdir cezar", "63653230268", "valdir@mail.com", encoder.encode("123"));
+			Tecnico tec2 = new Tecnico(null, "Rosana", "12345678901", "rosana@mail.com", encoder.encode("456"));
 			
 			tec1.addPerfil(Perfil.ADMIN);
 			tec2.addPerfil(Perfil.ADMIN);
 			
-			Cliente cli1 = new Cliente(null, "Linus Torvalds", "80527954780", "torvalds@mail.com","123");
-			Cliente cli2 = new Cliente(null, "Xuxa", "00000012312", "xuxa@mail.com","456");
-			Cliente cli3 = new Cliente(null, "Peter pan", "90958239223", "peter@mail.com", "789");
+			Cliente cli1 = new Cliente(null, "Linus Torvalds", "80527954780", "torvalds@mail.com",encoder.encode("123"));
+			Cliente cli2 = new Cliente(null, "Xuxa", "00000012312", "xuxa@mail.com",encoder.encode("456"));
+			Cliente cli3 = new Cliente(null, "Peter pan", "90958239223", "peter@mail.com", encoder.encode("789"));
 			
 			Chamado c1 = new Chamado(null, Prioridade.MEDIA, Status.ANDAMENTO, "Chamado 01", "Primeiro chamado",tec1,cli1);
 			Chamado c2 = new Chamado(null, Prioridade.BAIXA, Status.ABERTO, "Chamado 02", "Segundo chamado",tec1,cli2);
