@@ -5,14 +5,19 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.rosana.helpdesk.security.JWTAuthenticationFilter;
+import com.rosana.helpdesk.security.JWTUtil;
 
 
 //a @EnableWebSecurity já tem dentro dela tb a annotation @Configuration.
@@ -25,6 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private Environment env; //ambiente no qual nosso aplicativo atual está sendo executado. Pode
 	//ser usado para obter os perfis e propriedades do ambiente do aplicativo.
+	
+	@Autowired
+	private JWTUtil jwtUtil;
+	
+	@Autowired
+	private UserDetailsService userDetailsService; //ele já vai entender automaticamente que deve buscar a implementação, e não a interface.
 	
 	
 	//qualquer endpoint que requeira defesa contra vulnerabilidades pode ser especificado aqui dentro, inclusive
@@ -41,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		//ainda, DESABILITAMOS a proteção contra o ataque csrf (cross site request forgery),
 		//porque nao vamos armazenar sessao de usuário.
 		
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		
 		http.authorizeRequests()
 						.antMatchers(PUBLIC_MATCHERS).permitAll() //vai permitir toda requisição de PUBLIC_MATCHERS
 						.anyRequest().authenticated(); //para as demais, só o que estiver autenticado
@@ -48,7 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	
 	}
-		
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	}
 	
 	//vamos configurar o cors para receber requisições de múltiplas fontes (para que a gente consiga receber requisições do front)
 	@Bean

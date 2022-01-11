@@ -12,6 +12,7 @@ import com.rosana.helpdesk.domain.enums.Perfil;
 
 //criando classe UserSS conforme contrato do SpringSecurity
 //regra de negócio que podemos implementar conforme a necessidade do cliente
+//provides core User information
 public class UserSS implements UserDetails{
 	private static final long serialVersionUID = 1L;
 	
