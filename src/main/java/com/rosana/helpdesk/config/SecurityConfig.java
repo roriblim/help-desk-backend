@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,11 +18,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.rosana.helpdesk.security.JWTAuthenticationFilter;
+import com.rosana.helpdesk.security.JWTAuthorizationFilter;
 import com.rosana.helpdesk.security.JWTUtil;
 
 
 //a @EnableWebSecurity já tem dentro dela tb a annotation @Configuration.
+//@EnableGlobalMethodSecurity permite a gente colocar algumas annotations de permissões nos nossos endpoints - @PreAuthorize.
 
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
@@ -37,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsService userDetailsService; //ele já vai entender automaticamente que deve buscar a implementação, e não a interface.
 	
+	//note que o método authenticationManager() já existe dentro do WebSecurityConfigurerAdapter (mãe dessa classe)
 	
 	//qualquer endpoint que requeira defesa contra vulnerabilidades pode ser especificado aqui dentro, inclusive
 	//nossos endpoints públicos e algumas configurações de filtros
@@ -53,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		//porque nao vamos armazenar sessao de usuário.
 		
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		
 		http.authorizeRequests()
 						.antMatchers(PUBLIC_MATCHERS).permitAll() //vai permitir toda requisição de PUBLIC_MATCHERS
@@ -62,6 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	}
 	
+	//como será usada a autenticacao do framework, esse método configure deve ser sobrescrito. 
+	//Tem uma sobrecarga do configure, para dizer o password encoder que estamos usando na autenticação.
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());

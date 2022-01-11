@@ -69,7 +69,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		//authResult, aqui, é o resultado da tentativa de authentication!!
+		//authResult, aqui, é o resultado da authentication!!
 		String username = ((UserSS) authResult.getPrincipal()).getUsername();
 		//em caso de sucesso, ele deve gerar o token!
 		String token = jwtUtil.generateToken(username);
