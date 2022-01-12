@@ -59,7 +59,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 				UserDetails details = userDetailsService.loadUserByUsername(username);
 				//vamos agora criar um objeto UsernamePasswordAuthenticationToken a partir do userdetails resultante...
 				return new UsernamePasswordAuthenticationToken(details.getUsername(), null, details.getAuthorities());
-				//note que nao estamos passando a senha para obter o UsernamePasswordAuthenticationToken
+				//note que nao estamos passando a senha para obter o UsernamePasswordAuthenticationToken.
+				//isso pois não estamos validando o acesso pelas credenciais, e sim pelas authorities.
 		}
 		return null;
 	}
