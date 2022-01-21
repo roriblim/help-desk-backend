@@ -55,6 +55,7 @@ public class TecnicoResource {
 		@PreAuthorize("hasAnyRole('ADMIN')") //precisa ser admin para conseguir criar...
 		@PostMapping //as informações vão vir no corpo da requisição
 		public ResponseEntity<TecnicoDTO> create(@Valid @RequestBody TecnicoDTO  objDTO){
+			//System.out.println(objDTO);
 			Tecnico newObj = service.create(objDTO);
 			//podemos criar a URL do find by id para o objeto criado, e retornar isso na resposta.
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getId()).toUri();

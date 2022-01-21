@@ -98,8 +98,9 @@ public class TecnicoDTO implements Serializable{
 		this.senha = senha;
 	}
 
-	public Set<Perfil> getPerfis() {
-		return perfis.stream().map(x->Perfil.toEnum(x)).collect(Collectors.toSet());
+	public Set<Integer> getPerfis() {
+		//return perfis.stream().map(x->Perfil.toEnum(x)).collect(Collectors.toSet());
+		return perfis;
 	}
 
 	public void addPerfil(Perfil perfil) {
@@ -112,6 +113,12 @@ public class TecnicoDTO implements Serializable{
 
 	public void setDataCriacao(LocalDate dataCriacao) {
 		this.dataCriacao = dataCriacao;
+	}
+
+	@Override
+	public String toString() {
+		return "TecnicoDTO [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", senha=" + senha
+				+ ", perfis=" + perfis + ", dataCriacao=" + dataCriacao + "]";
 	}
 	
 	
