@@ -40,7 +40,7 @@ public class Tecnico extends Pessoa{
 		this.senha = obj.getSenha();
 		this.perfis = obj.getPerfis();
 		this.dataCriacao = obj.getDataCriacao();
-		addPerfil(Perfil.CLIENTE);
+	//	addPerfil(Perfil.CLIENTE);
 	}
 
 	public List<Chamado> getChamados() {
