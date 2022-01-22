@@ -98,8 +98,8 @@ public class ClienteDTO implements Serializable{
 		this.senha = senha;
 	}
 
-	public Set<Perfil> getPerfis() {
-		return perfis.stream().map(x->Perfil.toEnum(x)).collect(Collectors.toSet());
+	public Set<Integer> getPerfis() {
+		return perfis;
 	}
 
 	public void addPerfil(Perfil perfil) {

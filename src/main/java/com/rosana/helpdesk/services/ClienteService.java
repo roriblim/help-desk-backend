@@ -54,6 +54,11 @@ public class ClienteService {
 		// TODO Auto-generated method stub
 		objDTO.setId(id);
 		Cliente oldObj = findById(id);
+		//vamos colocar a senha para encriptar na atualização APENAS se a pessoa tiver alterado o campo da senha no front.
+		//caso contrário, ele poderia encriptar uma senha que já foi encriptada!
+		if(!objDTO.getSenha().equals(oldObj.getSenha())) {
+			objDTO.setSenha(encoder.encode(objDTO.getSenha()));
+		}
 		validaPorCpfEEmail(objDTO);
 		oldObj = new Cliente(objDTO);
 		return repository.save(oldObj);
